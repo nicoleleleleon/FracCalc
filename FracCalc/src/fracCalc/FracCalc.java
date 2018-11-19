@@ -12,11 +12,10 @@ public class FracCalc {
     	String response = "";
     	String input = "";
     	while (!done) {
-			input = userInput.next(); //gets equation
-			//produceAnswer(input);  puts into method
-			System.out.println(produceAnswer(input)); //prints answer
-			System.out.println("Do you want to keep going? Type \"quit\" to end");
-			response = userInput.next();//they'll type something
+			input = userInput.nextLine(); //gets equation
+			produceAnswer(input);  //puts into method
+			System.out.println("Do you want to keep going? Type \"quit\" to end. Otherwise, type anything!");
+			response = userInput.nextLine();//they'll type something
 			if (response.equals("quit")) { //if it is "quit"...
 				done = true;
 				System.out.println("Have a nice day!");
@@ -37,8 +36,16 @@ public class FracCalc {
     public static String produceAnswer(String input)
     { 
         // TODO: Implement this function to produce the solution to the input
-       System.out.println(Arrays.toString(input.split(" ")));
-        
+   //    String array = Arrays.toString(input.split(" "));
+   //    System.out.println(array);
+       String [] equat = input.split(" ");
+       String operand1 = equat[0];
+       String operator = equat[1];
+       String operand2 = equat[2];
+//       int num1 = Integer.parseInt(operand1);
+ //      int num2 = Integer.parseInt(operand2);
+      System.out.println(operand2);
+      
         return "";
     }
 
