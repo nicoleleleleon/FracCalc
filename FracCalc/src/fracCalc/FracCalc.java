@@ -95,7 +95,7 @@ public class FracCalc {
 	   }
 	   return intArray;
    }
-   public static String doMath(int[] num1, int[] num2, String operand) {
+   public static String doMath(int[] num1, int[] num2, String operand) {//if statements for operand then do da math
    
 }
 
