@@ -41,11 +41,13 @@ public class FracCalc {
        String operand2 = equat[2];
 //       int num1 = Integer.parseInt(operand1);
  //      int num2 = Integer.parseInt(operand2);
-      
-        return names(parts(operand2));
+      int[] num1 = intArray(array(parts(operand1)));
+      int[] num2 = intArray(array(parts(operand2)));
+      //doMath(num1,num2,operator);
+        return names(array(parts(operand2)));
     }
 	    
-   public static String[] parts(String input) {
+   public static String[] parts(String input) {//split into array without "/" and "_"
     	if(input.indexOf("_")>0 && input.indexOf("/")>0) {
     		String[] splitChars = input.split("_|\\/"); //splits _ and / ,, "|" makes it not split "_/" ,, "\\" separates them?
    		//System.out.println(Arrays.toString(splitChars));
@@ -64,19 +66,38 @@ public class FracCalc {
    }
     // TODO: Fill in the space below with any helper methods that you think you will need
 }
-   public static String names(String[] parts) {
-	   String name = "";
-	   if(parts.length == 3) {
-		   name = "whole:" + parts[0] + " numerator:" + parts[1] + " denominator:" + parts[2];
-	   } else if (parts.length == 2) {
-		   name = "whole:0" + " numerator:" + parts[0] + " denominator:" + parts[1];
-	   } else if (parts.length == 1) {
-		   name =  "whole:" + parts[0] + " numerator:0" + " denominator:1";
+   public static String[] array(String[] parts) {//turn array into format whole, num, denom
+	  String[] array = new String[3];
+	   if(parts.length==2) {
+		  array[0] = "0";
+		  array[1]=parts[0];
+		  array[2] = parts[1];
+	   }else if (parts.length==1) {
+		   array[0] = parts[0];
+		   array[1] = "0";
+		   array[2] = "1";
+	   }else if (parts.length==3) {
+		   for(int i=0; i<parts.length; i++) {
+			   array[i]=parts[i];
+		   }
 	   }
-	  // System.out.println(name);
-	   return name;
-   
+	   return array;
    }
+		      
+   public static String names(String[] array) {//print out labels of the wholes, nums, denoms
+	   String name = "whole:" + array[0] + " numerator:" + array[1] + " denominator:" + array[2];
+	   return name;
+   }
+   public static int[] intArray(String[] array) {//turn String array into int array
+	   int[] intArray = new int[3];
+	   for(int i=0;i<array.length;i++) {
+		   intArray[i]=Integer.parseInt(array[i]);
+	   }
+	   return intArray;
+   }
+   public static String doMath(int[] num1, int[] num2, String operand) {
+   
 }
 
 
+}
