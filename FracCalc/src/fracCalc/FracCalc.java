@@ -18,8 +18,6 @@ public class FracCalc {
 	
     	}
 			
-		
-		
     }
     
     // ** IMPORTANT ** DO NOT DELETE THIS FUNCTION.  This function will be used to test your code
@@ -43,8 +41,22 @@ public class FracCalc {
  //      int num2 = Integer.parseInt(operand2);
       int[] num1 = intArray(array(parts(operand1)));
       int[] num2 = intArray(array(parts(operand2)));
-      //doMath(num1,num2,operator);
-        return names(array(parts(operand2)));
+      //if */+-...  do method
+      //multiply(num1,num2);
+       // return names(array(parts(operand2)));
+      String answer = "";
+      if(operator.equals("+")) {
+    	  answer = addition(num1,num2);
+      } else if (operator.equals("-")) {
+    	  answer = subtraction(num1,num2);
+      } else  if (operator.equals("*")) {
+    	  answer = multiply(num1,num2);
+      } else if (operator.equals("/")){
+    	  answer = division(num1,num2);
+      }else {
+    	  answer = "Not a valid operator";
+      }
+      return toReducedMixedNum(answer);
     }
 	    
    public static String[] parts(String input) {//split into array without "/" and "_"
@@ -95,9 +107,85 @@ public class FracCalc {
 	   }
 	   return intArray;
    }
-   public static String doMath(int[] num1, int[] num2, String operand) {//if statements for operand then do da math
-   
+ //determines if int is evenly divisible by another//returns boolean
+ 	public static boolean isDivisibleBy(int num, int deno) {
+ 		if(deno==0) {
+ 			throw new IllegalArgumentException("Impossible to divide by \"0\".");
+ 		}
+ 		if(deno==0) {
+ 			return false;
+ 		}else {
+ 		return (num/deno) - (num % deno) == (num/deno);
+ 	}
+ }
+ 	public static int gcf(int num1, int num2) { //finds gcf, two int to int
+		int answer= num1; //if they don't share any factors then gcf is one
+		if(num1>num2) {
+			//answer =1;
+				for(int i=num2;num2>=1;i--) {
+					//working backwards starting from bigger number to get largest number
+					if(isDivisibleBy(num1,i)&&isDivisibleBy(num2,i)) {
+						//so that divisible for both numbers
+						return i; //so that it stops instead of continuously looping
+						}
+				} 
+		}else if(num1<num2){
+						// since don't want to divide smaller# by bigger#
+							for(int i=num1;num1>=1;i--) {
+								if((isDivisibleBy(num1,i))&&(isDivisibleBy(num2,i))) {
+									return i;		
+						}		
+					}
+	}
+	return answer;
+	}
+				
+   public static String multiply(int[] num1, int[] num2) {//if there was a * will go to this
+	   	int newNumer = ((toImproper(num1))[0])*((toImproper(num2))[0]);//takes array of numer and denom and multiplies
+	    int newDenom = ((toImproper(num1))[1])*((toImproper(num2))[1]);
+	   return newNumer + "/" + newDenom;
 }
-
-
+   public static int[] toImproper(int[] number) {//take in int[] return numerator and denominator in array
+	   if (number[0]<0 && number[1]>0) {//so that if it is a negative whole number, it stays negative when it goes to improper
+		  number[1] = number[1]*-1;
+	   }
+	   int numerator = ((number[0]*number[2])+number[1]);
+	   int denominator = number[2];
+	   int[] frac = {numerator, denominator};
+	   return frac;
+}
+   public static String division(int[] num1,int[] num2) {//takes array of numer and denom and divides
+	   int numer = ((toImproper(num1))[0])*((toImproper(num2))[1]);
+	   int denom = ((toImproper(num1))[1])*((toImproper(num2))[0]);
+	   return numer + "/" + denom;
+   }
+   public static int[] toSameDenom(int[] num1, int[] num2) {
+	   int[] newNum = {num1[0]*num2[1],num1[1]*num2[1]};
+	   return newNum;
+	   
+   }
+   public static String addition(int[] num1,int[] num2) {//adds
+	 int numerator = toSameDenom(toImproper(num1),toImproper(num2))[0] + toSameDenom(toImproper(num2),toImproper(num1))[0]; //adds numerators of the fractions that now have the same denom
+	 int denom = toSameDenom(toImproper(num1),toImproper(num2))[1];//both have same denom anyways
+	 return numerator + "/" + denom;
+}
+   public static String subtraction(int[] num1, int[] num2) {//subtracts
+	   int numerator = toSameDenom(toImproper(num1),toImproper(num2))[0] - toSameDenom(toImproper(num2),toImproper(num1))[0];
+	   int denom = toSameDenom(toImproper(num1),toImproper(num2))[1];//both have same denom anyways
+	   return numerator + "/" + denom;
+}
+	public static String toMixedNum(int[] intFrac) { //improper fraction to mixed number-- 2 ints to string
+		return (intFrac[0] / intFrac[1]) + "_" + (intFrac[0] % intFrac[1]) + "/" + intFrac[1]; 
+	}
+   public static String toReducedMixedNum(String answer) {
+	   String[] improperFrac = answer.split("/");
+	   int[] intFrac = new int[2];
+	   for(int i=0;i<improperFrac.length;i++) {
+		   intFrac[i]=Integer.parseInt(improperFrac[i]); // find way to reduce if 3_0/1 , 0_0/0, etc.
+	   }
+	   int gcf = gcf(intFrac[0], intFrac[1]);
+	   intFrac[0] = intFrac[0]/gcf;
+	   intFrac[1] = intFrac[1]/gcf;
+	   return toMixedNum(intFrac);
+   }
 }
