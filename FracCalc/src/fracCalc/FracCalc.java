@@ -56,7 +56,7 @@ public class FracCalc {
       }else {
     	  answer = "Not a valid operator";
       }
-      return toReducedMixedNum(answer);
+      return toReduced(answer);
     }
 	    
    public static String[] parts(String input) {//split into array without "/" and "_"
@@ -137,6 +137,9 @@ public class FracCalc {
 						}		
 					}
 	}
+		if(num1<0 || num2<0) {
+			answer *= -1;
+		}
 	return answer;
 	}
 				
@@ -175,17 +178,25 @@ public class FracCalc {
 	   return numerator + "/" + denom;
 }
 	public static String toMixedNum(int[] intFrac) { //improper fraction to mixed number-- 2 ints to string
-		return (intFrac[0] / intFrac[1]) + "_" + (intFrac[0] % intFrac[1]) + "/" + intFrac[1]; 
+		String answer = (intFrac[0] / intFrac[1]) + "_" + (intFrac[0] % intFrac[1]) + "/" + intFrac[1];
+		if(answer.startsWith("0_")) {
+			answer = "0";
+		} else if (answer.indexOf("_0")==1) {
+			answer = Integer.toString((intFrac[0] / intFrac[1]));
+		}
+		return answer;
 	}
-   public static String toReducedMixedNum(String answer) {
+   public static String toReduced(String answer) {
 	   String[] improperFrac = answer.split("/");
 	   int[] intFrac = new int[2];
 	   for(int i=0;i<improperFrac.length;i++) {
 		   intFrac[i]=Integer.parseInt(improperFrac[i]); // find way to reduce if 3_0/1 , 0_0/0, etc.
 	   }
 	   int gcf = gcf(intFrac[0], intFrac[1]);
+	   if(gcf!=0) {
 	   intFrac[0] = intFrac[0]/gcf;
 	   intFrac[1] = intFrac[1]/gcf;
+	   } 
 	   return toMixedNum(intFrac);
-   }
+   }//somehow broke my code more? keeps making 0s, probably a mistake in gcf, toReduced, or toMixedNum
 }
