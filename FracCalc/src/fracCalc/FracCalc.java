@@ -118,20 +118,29 @@ public class FracCalc {
  		return (num/deno) - (num % deno) == (num/deno);
  	}
  }
+ 	public static int absValue(int value) {
+		if(value<=0) {
+			return value*(-1);
+		}else{
+			return value; 
+		}
+	}
  	public static int gcf(int num1, int num2) { //finds gcf, two int to int
-		int answer= num1; //if they don't share any factors then gcf is one
-		if(num1>num2) {
+ 		int newNum1 = absValue(num1);
+ 		int newNum2 = absValue(num2);
+		int answer= 1; //if they don't share any factors then gcf is one
+		if(newNum1>newNum2) {
 			//answer =1;
 				for(int i=num2;num2>=1;i--) {
 					//working backwards starting from bigger number to get largest number
-					if(isDivisibleBy(num1,i)&&isDivisibleBy(num2,i)) {
+					if(isDivisibleBy(newNum1,i)&&isDivisibleBy(newNum2,i)) {
 						//so that divisible for both numbers
 						return i; //so that it stops instead of continuously looping
 						}
 				} 
-		}else if(num1<num2){
+		}else if(newNum1<newNum2){
 						// since don't want to divide smaller# by bigger#
-							for(int i=num1;num1>=1;i--) {
+							for(int i=newNum1;newNum1>=1;i--) {
 								if((isDivisibleBy(num1,i))&&(isDivisibleBy(num2,i))) {
 									return i;		
 						}		
@@ -158,8 +167,14 @@ public class FracCalc {
 	   return frac;
 }
    public static String division(int[] num1,int[] num2) {//takes array of numer and denom and divides
+	   //System.out.println(((toImproper(num1))[0]) + "and" + ((toImproper(num2))[1]));
 	   int numer = ((toImproper(num1))[0])*((toImproper(num2))[1]);
 	   int denom = ((toImproper(num1))[1])*((toImproper(num2))[0]);
+	   if(denom<0) {
+		   denom *= -1;
+		   numer *= -1;
+	   }
+	   //System.out.println(numer + "/" + denom);
 	   return numer + "/" + denom;
    }
    public static int[] toSameDenom(int[] num1, int[] num2) {
@@ -170,6 +185,7 @@ public class FracCalc {
    public static String addition(int[] num1,int[] num2) {//adds
 	 int numerator = toSameDenom(toImproper(num1),toImproper(num2))[0] + toSameDenom(toImproper(num2),toImproper(num1))[0]; //adds numerators of the fractions that now have the same denom
 	 int denom = toSameDenom(toImproper(num1),toImproper(num2))[1];//both have same denom anyways
+	 //System.out.println(numerator + "/" + denom);
 	 return numerator + "/" + denom;
 }
    public static String subtraction(int[] num1, int[] num2) {//subtracts
@@ -178,10 +194,19 @@ public class FracCalc {
 	   return numerator + "/" + denom;
 }
 	public static String toMixedNum(int[] intFrac) { //improper fraction to mixed number-- 2 ints to string
-		String answer = (intFrac[0] / intFrac[1]) + "_" + (intFrac[0] % intFrac[1]) + "/" + intFrac[1];
-		if(answer.startsWith("0_")) {
+		int whole = intFrac[0] / intFrac[1];
+		int numer = intFrac[0] % intFrac[1];
+		int denom = absValue(intFrac[1]);
+		if(numer<0 && whole<0) {
+			numer *= -1;
+		}
+		String answer = Integer.toString(whole) + "_" + Integer.toString(numer) + "/" + Integer.toString(denom);
+		//System.out.println(answer);
+		if(answer.startsWith("0_0")) {
 			answer = "0";
-		} else if (answer.indexOf("_0")==1) {
+		} else if (answer.startsWith("0_")) {
+			answer = answer.replace("0_", "");
+		} else if (answer.indexOf("_0")!=-1) {
 			answer = Integer.toString((intFrac[0] / intFrac[1]));
 		}
 		return answer;
@@ -192,11 +217,13 @@ public class FracCalc {
 	   for(int i=0;i<improperFrac.length;i++) {
 		   intFrac[i]=Integer.parseInt(improperFrac[i]); // find way to reduce if 3_0/1 , 0_0/0, etc.
 	   }
-	   int gcf = gcf(intFrac[0], intFrac[1]);
+	   int gcf = absValue(gcf(intFrac[0], intFrac[1]));
+	   //System.out.println("gcf " + gcf);
 	   if(gcf!=0) {
 	   intFrac[0] = intFrac[0]/gcf;
 	   intFrac[1] = intFrac[1]/gcf;
 	   } 
 	   return toMixedNum(intFrac);
    }//somehow broke my code more? keeps making 0s, probably a mistake in gcf, toReduced, or toMixedNum
+   //when time, go to toMixedNum and change the if statement for answer 0 to see if makes difference
 }
