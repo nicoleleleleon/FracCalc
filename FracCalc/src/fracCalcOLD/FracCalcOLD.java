@@ -1,7 +1,7 @@
-package fracCalc;
+package fracCalcOLD;
 import java.util.*;
 
-public class FracCalc {
+public class FracCalcOLD {
 
     public static void main(String[] args) 
     {
